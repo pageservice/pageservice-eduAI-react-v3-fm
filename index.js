@@ -26,7 +26,7 @@ dotenv.config();
 
 const app = express();
 //app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
-app.use(cors({ origin: 'https://pageservice-eduai-react-v3-fm.onrender.com', credentials: true })); //✅백엔드서버주소✅
+app.use(cors({ origin: 'https://eduai-react-v3-fm.vercel.app/ ', credentials: true })); //✅백엔드서버주소✅
 app.use(express.json());
 
 // 라우터 연결
