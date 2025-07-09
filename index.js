@@ -23,13 +23,12 @@ import authRoutes from './routes/auth.js';
 import courseRoutes from './routes/courses.js';
 
 dotenv.config();
-~
 const app = express();
 const whitelist = [
   'http://localhost:5173',                        // 로컬 프론트엔드 실행 주소
   'https://eduai-react-v3-fm.vercel.app'          // 정식 배포 주소도 함께 허용
 ];
-app.use(cors({ origin: 'https://eduai-react-v3-fm.vercel.app', credentials: true })); 
+app.use(cors({ origin: whitelist, credentials: true })); 
 //app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 //app.use(cors({ origin: 'https://eduai-react-v3-fm.vercel.app', credentials: true })); //✅RENDER 프론트엔드 서버요청주소✅
 app.use(express.json());
