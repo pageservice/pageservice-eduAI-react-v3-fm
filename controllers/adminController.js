@@ -60,7 +60,7 @@ export const getImages = async (req, res) => {
 // ✅✅ 이미지 삭제 컨트롤러
 export const deleteImage = async (req, res) => {
   const { public_id } = req.body;
-
+  console.log('🗑 삭제 요청됨: ', public_id); // ← 로그 추가
   try {
     // ✅ 1. Cloudinary에서 이미지 삭제
     const result = await cloudinary.uploader.destroy(public_id);
