@@ -54,4 +54,23 @@ export const getImages = async (req, res) => {
     console.error('❌ Cloudinary API 오류:', err); // ← 핵심 로그 
     res.status(500).json({ error: 'Cloudinary 이미지 조회 실패', detail: err.message });
   }
+
+  
+};
+// ✅✅ 이미지 삭제 컨트롤러
+export const deleteImage = async (req, res) => {
+  const { public_id } = req.body;
+
+  try {
+    // ✅ 1. Cloudinary에서 이미지 삭제
+    const result = await cloudinary.uploader.destroy(public_id);
+
+    // ✅ 2. MongoDB에서도 해당 이미지 문서 삭제
+    await Image.findOneAndDelete({ public_id });
+
+    res.json({ success: true, result });
+  } catch (err) {
+    console.error('❌ 이미지 삭제 실패:', err);
+    res.status(500).json({ success: false, message: '이미지 삭제 실패', detail: err.message });
+  }
 };
