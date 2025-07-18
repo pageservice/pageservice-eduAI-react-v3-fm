@@ -46,6 +46,7 @@ export const getImages = async (req, res) => {
       sort_by: 'created_at:desc', // ← 추가 옵션✅✅
     });
     res.json(result.resources); // 배열 반환
+    console.log(result.resources[0]);
   } catch (err) {
     // res.status(500).json({ error: 'Cloudinary 이미지 조회 실패' });
     //    로그 필수!
