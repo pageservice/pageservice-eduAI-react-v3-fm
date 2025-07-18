@@ -30,7 +30,7 @@ export const uploadImage = async (req, res) => {
 
     res.json({ url });
   } catch (err) {
-    console.error('❌ 이미지 업로드 실패:', err); // 로그 필수!
+    console.error('❌ 이미지 업로드 실패:', err); // 로그 필수 !  
     res.status(500).json({ error: '이미지 업로드 실패' });
   }
 };
