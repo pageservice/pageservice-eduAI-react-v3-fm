@@ -39,15 +39,24 @@ export const uploadImage = async (req, res) => {
 export const getImages = async (req, res) => {
   try {
     console.log('🔍 이미지 리스트 요청 by1111111', req.user?.id);  // 추가1 로그 필수!
-    const result = await cloudinary.api.resources({
-      type: 'upload',
-      prefix: 'admin-uploads/',
-      max_results: 30,
-      sort_by: 'created_at:desc', // ← 추가 옵션✅✅
-    });
-    console.log(result.resources[0]);
-    res.json(result.resources); // 배열 반환
+
+    /* ✅✅ 기존 Cloudinary 직접 호출 방식 (사용 안함, 주석처리)
+      const result = await cloudinary.api.resources({
+        type: 'upload',
+        prefix: 'admin-uploads/',
+        max_results: 30,
+        sort_by: 'created_at:desc', // ← 추가 옵션
+      });
+      console.log(result.resources[0]);
+      res.json(result.resources); // 배열 반환
+   */ 
+
+    // ✅✅ 수정된 MongoDB 조회 방식
+    const images = await Image.find().sort({ createdAt: -1 }); // 최신순 정렬
+    console.log('📦 MongoDB에서 불러온 이미지 수:', images.length); // ✅ 개수 로그
+    res.json(images); // 배열 반환
     
+
   } catch (err) {
     // res.status(500).json({ error: 'Cloudinary 이미지 조회 실패' });
     //    로그 필수!
@@ -57,7 +66,7 @@ export const getImages = async (req, res) => {
 
   
 };
-// ✅✅ 이미지 삭제 컨트롤러
+// ✅이미지 삭제 컨트롤러
 export const deleteImage = async (req, res) => {
   const { public_id } = req.body;
   console.log('🗑 삭제 요청됨: ', public_id); // ← 로그 추가
