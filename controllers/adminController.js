@@ -1,7 +1,8 @@
 // server/controllers/adminController.js
 import User from '../models/User.js';
 import Image from '../models/Image.js';// 이미지 업로드 컨트롤러
-import cloudinary from '../config/cloudinary.js'; //추가0✅✅✅ ← 누락된 cloudinary import
+import Video from '../models/Video.js';// 이미지 업로드 컨트롤러 //✅✅✅ 영상모델 가져오기
+import cloudinary from '../config/cloudinary.js'; //추가0✅ ← 누락된 cloudinary import
 
 export const getDashboardStats = async (req, res) => {
   const userCount = await User.countDocuments();
@@ -84,5 +85,55 @@ export const deleteImage = async (req, res) => {
   } catch (err) {
     console.error('❌ 이미지 삭제 실패:', err);
     res.status(500).json({ success: false, message: '이미지 삭제 실패', detail: err.message });
+  }
+};
+
+
+// ✅✅✅ 영상 업로드 후 DB 저장
+export const uploadVideoFile = async (req, res) => {
+  try {
+    const videoUrl = req.file?.path;
+    const public_id = req.file?.filename;
+
+    const newVideo = new Video({
+      url: videoUrl,
+      public_id,
+      uploadedBy: req.user?.id,
+    });
+
+    await newVideo.save();
+
+    res.json({ videoUrl, public_id });
+  } catch (err) {
+    console.error('❌ 영상 업로드 실패:', err);
+    res.status(500).json({ error: '영상 업로드 실패' });
+  }
+};
+
+// ✅✅✅ 영상 목록 조회
+export const getVideos = async (req, res) => {
+  try {
+    const videos = await Video.find().sort({ createdAt: -1 });
+    res.json(videos);
+  } catch (err) {
+    console.error('❌ 영상 목록 불러오기 실패:', err);
+    res.status(500).json({ error: '영상 목록 조회 실패' });
+  }
+};
+
+// ✅✅✅ 영상 삭제
+export const deleteVideo = async (req, res) => {
+  const { public_id } = req.body;
+  try {
+    const result = await cloudinary.uploader.destroy(public_id, {
+      resource_type: 'video',
+    });
+
+    await Video.findOneAndDelete({ public_id });
+
+    res.json({ success: true, result });
+  } catch (err) {
+    console.error('❌ 영상 삭제 실패:', err);
+    res.status(500).json({ success: false, error: err.message });
   }
 };

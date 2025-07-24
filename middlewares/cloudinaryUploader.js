@@ -13,4 +13,15 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
-export default upload;
+const videoStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    resource_type: 'video',              // ✅ 영상 전용
+    folder: 'admin-videos',
+    allowed_formats: ['mp4', 'mov', 'webm', 'mkv'],
+  },
+});
+
+const uploadVideo = multer({ storage: videoStorage });
+
+export { upload, uploadVideo };
